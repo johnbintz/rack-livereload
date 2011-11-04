@@ -7,7 +7,7 @@ Use this with [guard-livereload](http://github.com/guard/guard-livereload) for m
 
 ### Rails
 
-In `config/initializers/development.rb`:
+In `config/environments/development.rb`:
 
 ``` ruby
 MyApp::Application.configure do
