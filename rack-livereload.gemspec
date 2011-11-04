@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["John Bintz"]
   s.email       = ["john@coswellproductions.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Insert LiveReload into your app easily as Rack middleware}
+  s.description = %q{Insert LiveReload into your app easily as Rack middleware}
 
   s.rubyforge_project = "rack-livereload"
 
