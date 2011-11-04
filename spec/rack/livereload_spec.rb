@@ -27,6 +27,9 @@ describe Rack::LiveReload do
       app.stubs(:call).with(env).returns([ 200, { 'Content-Type' => 'text/html', 'Content-Length' => 0 }, [ '<head></head>' ] ])
     end
 
+    let(:host) { 'host' }
+    let(:env) { { 'HTTP_HOST' => host } }
+
     let(:ret) { middleware.call(env) }
     let(:body) { ret.last.join }
     let(:length) { ret[1]['Content-Length'] }
@@ -36,6 +39,8 @@ describe Rack::LiveReload do
       body.should include(described_class::LIVERELOAD_JS_PATH)
 
       length.should == body.length.to_s
+
+      described_class::LIVERELOAD_JS_PATH.should_not include(host)
     end
   end
 

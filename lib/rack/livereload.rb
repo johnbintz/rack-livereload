@@ -20,7 +20,7 @@ module Rack
 
           body.each do |line|
             if line['</head>']
-              src = LIVERELOAD_JS_PATH
+              src = LIVERELOAD_JS_PATH.dup
               src << "?host=#{env['HTTP_HOST'].gsub(%r{:.*}, '')}" if env['HTTP_HOST']
 
               line.gsub!('</head>', %{<script type="text/javascript" src="#{src}"></script></head>})
