@@ -42,6 +42,19 @@ describe Rack::LiveReload do
 
       described_class::LIVERELOAD_JS_PATH.should_not include(host)
     end
+
+    context 'set options' do
+      let(:middleware) { described_class.new(app, :port => port, :min_delay => min_delay, :max_delay => max_delay) }
+      let(:min_delay) { 5 }
+      let(:max_delay) { 10 }
+      let(:port) { 23 }
+
+      it 'should add the livereload.js script tag' do
+        body.should include("mindelay=#{min_delay}")
+        body.should include("maxdelay=#{max_delay}")
+        body.should include("port=#{port}")
+      end
+    end
   end
 
   context '/__rack/livereload.js' do
@@ -56,3 +69,4 @@ describe Rack::LiveReload do
     end
   end
 end
+

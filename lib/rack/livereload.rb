@@ -4,8 +4,9 @@ module Rack
 
     attr_reader :app
 
-    def initialize(app)
+    def initialize(app, options = {})
       @app = app
+      @options = options
     end
 
     def call(env)
@@ -22,6 +23,9 @@ module Rack
             if !headers['X-Rack-LiveReload'] && line['</head>']
               src = LIVERELOAD_JS_PATH.dup
               src << "?host=#{env['HTTP_HOST'].gsub(%r{:.*}, '')}" if env['HTTP_HOST']
+              src << "&mindelay=#{@options[:min_delay]}" if @options[:min_delay]
+              src << "&maxdelay=#{@options[:max_delay]}" if @options[:max_delay]
+              src << "&port=#{@options[:port]}" if @options[:port]
 
               line.gsub!('</head>', %{<script type="text/javascript" src="#{src}"></script></head>})
 

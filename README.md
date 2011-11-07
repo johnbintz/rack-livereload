@@ -12,6 +12,15 @@ In `config/environments/development.rb`:
 ``` ruby
 MyApp::Application.configure do
   config.middleware.insert_before(Rack::Lock, Rack::LiveReload)
+
+  # ...or, change some options...
+
+  config.middleware.insert_before(
+    Rack::Lock, Rack::LiveReload,
+    :min_delay => 500,
+    :max_delay => 10000,
+    :port => 56789
+  )
 end
 ```
 
@@ -21,6 +30,8 @@ end
 require 'rack-livereload'
 
 use Rack::LiveReload
+# ...or...
+use Rack::LiveReload, :min_delay => 500, ...
 ```
 
 ## How it works
@@ -33,9 +44,7 @@ you'll connect and be LiveReloading away!
 
 ## To-do
 
-* Specify the `port`
 * Override the `host`
-* Change the reload delays
 
 As usual, super-alpha!
 
