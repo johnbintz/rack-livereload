@@ -16,20 +16,18 @@ module Rack
 
         case headers['Content-Type']
         when %r{text/html}
-          new_body = []
-
           body.each do |line|
             if line['</head>']
               src = LIVERELOAD_JS_PATH.dup
               src << "?host=#{env['HTTP_HOST'].gsub(%r{:.*}, '')}" if env['HTTP_HOST']
 
               line.gsub!('</head>', %{<script type="text/javascript" src="#{src}"></script></head>})
+              headers["X-Rack-LiveReload"] = '1'
+
+              break
             end
-            new_body << line
-            headers["X-Rack-LiveReload"] = '1'
           end
 
-          body = new_body
           headers['Content-Length'] = body.join.length.to_s
         end
 
