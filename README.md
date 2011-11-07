@@ -3,6 +3,10 @@ No need for browser extensions anymore! Just plug it in your middleware stack an
 
 Use this with [guard-livereload](http://github.com/guard/guard-livereload) for maximum fun!
 
+## Install
+
+`gem install rack-livereload`
+
 ## Using in...
 
 ### Rails
