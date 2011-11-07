@@ -19,7 +19,8 @@ MyApp::Application.configure do
     Rack::Lock, Rack::LiveReload,
     :min_delay => 500,
     :max_delay => 10000,
-    :port => 56789
+    :port => 56789,
+    :host => 'myhost.cool.wow'
   )
 end
 ```
@@ -41,10 +42,6 @@ injected right before the closing `head` tag in any `text/html` pages that come 
 such a way that the `HTTP_HOST` is used as the LiveReload host, so you can connect from external machines (say, to
 `mycomputer:3000` instead of `localhost:3000`) and as long as the LiveReload port is accessible from the external machine,
 you'll connect and be LiveReloading away!
-
-## To-do
-
-* Override the `host`
 
 As usual, super-alpha!
 

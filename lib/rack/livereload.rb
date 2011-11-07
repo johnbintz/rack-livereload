@@ -22,7 +22,11 @@ module Rack
           body.each do |line|
             if !headers['X-Rack-LiveReload'] && line['</head>']
               src = LIVERELOAD_JS_PATH.dup
-              src << "?host=#{env['HTTP_HOST'].gsub(%r{:.*}, '')}" if env['HTTP_HOST']
+              if @options[:host]
+                src << "?host=#{@options[:host]}"
+              else
+                src << "?host=#{env['HTTP_HOST'].gsub(%r{:.*}, '')}" if env['HTTP_HOST']
+              end
               src << "&mindelay=#{@options[:min_delay]}" if @options[:min_delay]
               src << "&maxdelay=#{@options[:max_delay]}" if @options[:max_delay]
               src << "&port=#{@options[:port]}" if @options[:port]
