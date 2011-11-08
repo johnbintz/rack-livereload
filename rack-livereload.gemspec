@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mocha"
   s.add_development_dependency "guard"
   s.add_development_dependency "guard-rspec"
+  s.add_development_dependency "webmock"
 
   s.add_runtime_dependency "rack"
 end

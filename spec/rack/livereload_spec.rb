@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Rack::LiveReload do
-  let(:middleware) { described_class.new(app) }
+  let(:middleware) { described_class.new(app, options) }
   let(:app) { stub }
 
   subject { middleware }
@@ -9,6 +9,37 @@ describe Rack::LiveReload do
   its(:app) { should == app }
 
   let(:env) { {} }
+  let(:options) { {} }
+
+  describe described_class::LIVERELOAD_LOCAL_URI do
+    context 'does not exist' do
+      before do
+        stub_request(:any, 'localhost:35729/livereload.js').to_timeout
+      end
+
+      it { should use_vendored }
+    end
+
+    context 'exists' do
+      before do
+        stub_request(:any, 'localhost:35729/livereload.js')
+      end
+
+      it { should_not use_vendored }
+    end
+
+    context 'specify vendored' do
+      let(:options) { { :source => :vendored } }
+
+      it { should use_vendored }
+    end
+
+    context 'specify LR' do
+      let(:options) { { :source => :livereload } }
+
+      it { should_not use_vendored }
+    end
+  end
 
   context 'not text/html' do
     let(:ret) { [ 200, { 'Content-Type' => 'image/png' }, [ '<head></head>' ] ] }
@@ -25,6 +56,7 @@ describe Rack::LiveReload do
   context 'text/html' do
     before do
       app.stubs(:call).with(env).returns([ 200, { 'Content-Type' => 'text/html', 'Content-Length' => 0 }, [ '<head></head>' ] ])
+      middleware.stubs(:use_vendored?).returns(true)
     end
 
     let(:host) { 'host' }
@@ -34,13 +66,26 @@ describe Rack::LiveReload do
     let(:body) { ret.last.join }
     let(:length) { ret[1]['Content-Length'] }
 
-    it 'should add the livereload js script tag' do
-      body.should include("script")
-      body.should include(described_class::LIVERELOAD_JS_PATH)
+    context 'vendored' do
+      it 'should add the vendored livereload js script tag' do
+        body.should include("script")
+        body.should include(described_class::LIVERELOAD_JS_PATH)
 
-      length.should == body.length.to_s
+        length.should == body.length.to_s
 
-      described_class::LIVERELOAD_JS_PATH.should_not include(host)
+        described_class::LIVERELOAD_JS_PATH.should_not include(host)
+      end
+    end
+
+    context 'not vendored' do
+      before do
+        middleware.stubs(:use_vendored?).returns(false)
+      end
+
+      it 'should add the LR livereload js script tag' do
+        body.should include("script")
+        body.should include(described_class::LIVERELOAD_LOCAL_URI.gsub('localhost', 'host'))
+      end
     end
 
     context 'set options' do

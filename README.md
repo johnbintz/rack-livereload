@@ -41,11 +41,20 @@ use Rack::LiveReload, :min_delay => 500, ...
 
 ## How it works
 
-The necessary `script` tag to bring in a vendored copy of [livereload.js](https://github.com/livereload/livereload-js) is
+The necessary `script` tag to bring in a copy of [livereload.js](https://github.com/livereload/livereload-js) is
 injected right before the closing `head` tag in any `text/html` pages that come through. The `script` tag is built in
 such a way that the `HTTP_HOST` is used as the LiveReload host, so you can connect from external machines (say, to
 `mycomputer:3000` instead of `localhost:3000`) and as long as the LiveReload port is accessible from the external machine,
 you'll connect and be LiveReloading away!
+
+### Which LiveReload script does it use?
+
+* If you've got a LiveReload watcher running on the same machine as the app that responds
+  to `http://localhost:35729/livereload.js`, that gets used, with the hostname being changed when
+  injected into the HTML page.
+* If you don't, the copy vendored with rack-livereload is used.
+* You can force the use of either one (and save on the cost of checking to see if that file
+  is available) with the middleware option `:source => :vendored` or `:source => :livereload`.
 
 As usual, super-alpha!
 
