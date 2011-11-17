@@ -1,3 +1,5 @@
+require 'erb'
+
 module Rack
   class LiveReload
     LIVERELOAD_JS_PATH = '/__rack/livereload.js'
@@ -39,8 +41,10 @@ module Rack
     end
 
     def call(env)
-      if env['PATH_INFO'] == LIVERELOAD_JS_PATH
-        deliver_file(::File.expand_path('../../../js/livereload.js', __FILE__))
+      _, path, file = (env['PATH_INFO'] || '').split('/')
+
+      if path == '__rack' && ::File.file?(target = ::File.expand_path("../../../js/#{file}", __FILE__))
+        deliver_file(target)
       else
         status, headers, body = @app.call(env)
 
@@ -62,7 +66,9 @@ module Rack
               src << "&maxdelay=#{@options[:max_delay]}" if @options[:max_delay]
               src << "&port=#{@options[:port]}" if @options[:port]
 
-              line.gsub!('</head>', %{<script type="text/javascript" src="#{src}"></script></head>})
+              template = ERB.new(::File.read(::File.expand_path('../../../skel/livereload.html.erb', __FILE__)))
+
+              line.gsub!('</head>', %{#{template.result(binding)}</head>})
 
               headers["X-Rack-LiveReload"] = '1'
             end
@@ -79,7 +85,22 @@ module Rack
 
     private
     def deliver_file(file)
-      [ 200, { 'Content-Type' => 'text/javascript', 'Content-Length' => ::File.size(file).to_s }, [ ::File.read(file) ] ]
+      type = case ::File.extname(file)
+             when '.js'
+               'text/javascript'
+             when '.swf'
+               'application/swf'
+             end
+
+      [ 200, { 'Content-Type' => type, 'Content-Length' => ::File.size(file).to_s }, [ ::File.read(file) ] ]
+    end
+
+    def force_swf?
+      @options[:force_swf]
+    end
+
+    def with_swf?
+      !@options[:no_swf]
     end
   end
 end

@@ -74,6 +74,9 @@ describe Rack::LiveReload do
         length.should == body.length.to_s
 
         described_class::LIVERELOAD_JS_PATH.should_not include(host)
+
+        body.should include('swfobject')
+        body.should include('web_socket')
       end
     end
 
@@ -100,6 +103,25 @@ describe Rack::LiveReload do
         body.should include("maxdelay=#{max_delay}")
         body.should include("port=#{port}")
         body.should include("host=#{new_host}")
+      end
+    end
+
+    context 'force flash' do
+      let(:middleware) { described_class.new(app, :force_swf => true) }
+
+      it 'should not add the flash shim' do
+        body.should include('WEB_SOCKET_FORCE_FLASH')
+        body.should include('swfobject')
+        body.should include('web_socket')
+      end
+    end
+
+    context 'no flash' do
+      let(:middleware) { described_class.new(app, :no_swf => true) }
+
+      it 'should not add the flash shim' do
+        body.should_not include('swfobject')
+        body.should_not include('web_socket')
       end
     end
   end

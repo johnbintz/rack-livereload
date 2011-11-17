@@ -7,3 +7,6 @@ guard 'rspec', :version => 2 do
   watch('spec/spec_helper.rb')  { "spec" }
 end
 
+guard 'livereload' do
+  watch('index.html')
+end

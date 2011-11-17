@@ -56,5 +56,25 @@ you'll connect and be LiveReloading away!
 * You can force the use of either one (and save on the cost of checking to see if that file
   is available) with the middleware option `:source => :vendored` or `:source => :livereload`.
 
+### How about non-WebSocket-enabled browsers?
+
+For browsers that don't support WebSockets, but do support Flash, [https://github.com/gimite/web-socket-js](web-socket-js)
+is loaded. By default, this is done transparently, so you'll get a copy of swfobject.js and web_socket.js loaded even if
+your browser doesn't need it. The SWF WebSocket implementor won't be loaded unless your browser has no native
+WebSockets support or if you force it in the middleware stack:
+
+``` ruby
+use Rack::LiveReload, :force_swf => true
+```
+
+If you don't want any of the web-sockets-js code included at all, use the `no_swf` option:
+
+``` ruby
+use Rack::LiveReload, :no_swf => true
+```
+
+Once more browsers support WebSockets than don't, this option will be reversed and you'll have
+to explicitly include the Flash shim.
+
 As usual, super-alpha!
 

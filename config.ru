@@ -3,10 +3,11 @@ $: << 'lib'
 
 require 'rack/livereload'
 
+use Rack::Logger
 use Rack::LiveReload
 
 get '/' do
-  "<html><head><title>Hi</title></head><body>Hi</body></html>"
+  File.read('index.html')
 end
 
 run Sinatra::Application

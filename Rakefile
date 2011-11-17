@@ -9,8 +9,20 @@ task :update_livereload_js do
   }
 end
 
+desc 'Update web-socket-js'
+task :update_web_socket_js do
+  require 'httparty'
+
+  %w{swfobject.js web_socket.js WebSocketMain.swf}.each do |file|
+    File.open("js/#{file}", 'wb') do |fh|
+      fh.print HTTParty.get("https://raw.github.com/gimite/web-socket-js/master/#{file}").body
+    end
+  end
+end
+
 require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:spec)
 
 task :default => :spec
+
