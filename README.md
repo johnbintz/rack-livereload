@@ -1,5 +1,6 @@
 Hey, you've got [LiveReload](http://www.livereload.com/) in my [Rack](http://rack.rubyforge.org/)!
 No need for browser extensions anymore! Just plug it in your middleware stack and go!
+Even supports browsers without WebSockets!
 
 Use this with [guard-livereload](http://github.com/guard/guard-livereload) for maximum fun!
 
