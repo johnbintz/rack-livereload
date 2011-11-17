@@ -58,7 +58,7 @@ you'll connect and be LiveReloading away!
 
 ### How about non-WebSocket-enabled browsers?
 
-For browsers that don't support WebSockets, but do support Flash, [https://github.com/gimite/web-socket-js](web-socket-js)
+For browsers that don't support WebSockets, but do support Flash, [web-socket-js](https://github.com/gimite/web-socket-js)
 is loaded. By default, this is done transparently, so you'll get a copy of swfobject.js and web_socket.js loaded even if
 your browser doesn't need it. The SWF WebSocket implementor won't be loaded unless your browser has no native
 WebSockets support or if you force it in the middleware stack:
