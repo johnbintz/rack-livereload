@@ -124,6 +124,14 @@ describe Rack::LiveReload do
         body.should_not include('web_socket')
       end
     end
+
+    context 'no host at all' do
+      let(:env) { {} }
+
+      it 'should use localhost' do
+        body.should include('localhost')
+      end
+    end
   end
 
   context '/__rack/livereload.js' do
