@@ -54,7 +54,7 @@ module Rack
 
           body.each do |line|
             if !headers['X-Rack-LiveReload'] && line['</head>']
-              host_to_use = @options[:host] || env['HTTP_HOST'].gsub(%r{:.*}, '')
+              host_to_use = (@options[:host] || env['HTTP_HOST'] || 'localhost').gsub(%r{:.*}, '')
 
               if use_vendored?
                 src = LIVERELOAD_JS_PATH.dup + "?host=#{host_to_use}"
