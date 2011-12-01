@@ -25,7 +25,8 @@ MyApp::Application.configure do
     :min_delay => 500,
     :max_delay => 10000,
     :port => 56789,
-    :host => 'myhost.cool.wow'
+    :host => 'myhost.cool.wow',
+    :ignore => [ %r{dont/modify\.html$} ]
   )
 end
 ```

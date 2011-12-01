@@ -48,35 +48,37 @@ module Rack
       else
         status, headers, body = @app.call(env)
 
-        case headers['Content-Type']
-        when %r{text/html}
-          content_length = 0
+        if !@options[:ignore] || !@options[:ignore].any? { |filter| path[filter] }
+          case headers['Content-Type']
+          when %r{text/html}
+            content_length = 0
 
-          body.each do |line|
-            if !headers['X-Rack-LiveReload'] && line['</head>']
-              host_to_use = (@options[:host] || env['HTTP_HOST'] || 'localhost').gsub(%r{:.*}, '')
+            body.each do |line|
+              if !headers['X-Rack-LiveReload'] && line['</head>']
+                host_to_use = (@options[:host] || env['HTTP_HOST'] || 'localhost').gsub(%r{:.*}, '')
 
-              if use_vendored?
-                src = LIVERELOAD_JS_PATH.dup + "?host=#{host_to_use}"
-              else
-                src = LIVERELOAD_LOCAL_URI.dup.gsub('localhost', host_to_use) + '?'
+                if use_vendored?
+                  src = LIVERELOAD_JS_PATH.dup + "?host=#{host_to_use}"
+                else
+                  src = LIVERELOAD_LOCAL_URI.dup.gsub('localhost', host_to_use) + '?'
+                end
+
+                src << "&mindelay=#{@options[:min_delay]}" if @options[:min_delay]
+                src << "&maxdelay=#{@options[:max_delay]}" if @options[:max_delay]
+                src << "&port=#{@options[:port]}" if @options[:port]
+
+                template = ERB.new(::File.read(::File.expand_path('../../../skel/livereload.html.erb', __FILE__)))
+
+                line.gsub!('</head>', %{#{template.result(binding)}</head>})
+
+                headers["X-Rack-LiveReload"] = '1'
               end
 
-              src << "&mindelay=#{@options[:min_delay]}" if @options[:min_delay]
-              src << "&maxdelay=#{@options[:max_delay]}" if @options[:max_delay]
-              src << "&port=#{@options[:port]}" if @options[:port]
-
-              template = ERB.new(::File.read(::File.expand_path('../../../skel/livereload.html.erb', __FILE__)))
-
-              line.gsub!('</head>', %{#{template.result(binding)}</head>})
-
-              headers["X-Rack-LiveReload"] = '1'
+              content_length += line.length
             end
 
-            content_length += line.length
+            headers['Content-Length'] = content_length.to_s
           end
-
-          headers['Content-Length'] = content_length.to_s
         end
 
         [ status, headers, body ]
