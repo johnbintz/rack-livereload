@@ -135,10 +135,21 @@ describe Rack::LiveReload do
 
     context 'ignored' do
       let(:options) { { :ignore => [ %r{file} ] } }
-      let(:env) { { 'PATH_INFO' => 'this/file' } }
 
-      it 'should have no change' do
-        body.should_not include('script')
+      context 'not root' do
+        let(:env) { { 'PATH_INFO' => '/this/file' } }
+
+        it 'should have no change' do
+          body.should_not include('script')
+        end
+      end
+
+      context 'root' do
+        let(:env) { { 'PATH_INFO' => '/' } }
+
+        it 'should have script' do
+          body.should include('script')
+        end
       end
     end
   end

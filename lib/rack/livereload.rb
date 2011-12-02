@@ -48,7 +48,7 @@ module Rack
       else
         status, headers, body = @app.call(env)
 
-        if !@options[:ignore] || !@options[:ignore].any? { |filter| path[filter] }
+        if !@options[:ignore] || !@options[:ignore].any? { |filter| env['PATH_INFO'][filter] }
           case headers['Content-Type']
           when %r{text/html}
             content_length = 0
