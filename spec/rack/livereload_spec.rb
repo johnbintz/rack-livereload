@@ -165,5 +165,25 @@ describe Rack::LiveReload do
       middleware.call(env).should be_true
     end
   end
+
+  describe '#ignored?' do
+    let(:path_info) { 'path info' }
+
+    context 'no ignore set' do
+      it { should_not be_ignored(path_info) }
+    end
+
+    context 'ignore set' do
+      let(:options) { { :ignore => [ %r{#{path_info}} ] } }
+
+      it { should be_ignored(path_info) }
+    end
+  end
+
+  describe '#bad_browser?' do
+    let(:user_agent) { described_class::BAD_USER_AGENTS.first.source }
+
+    it { should be_bad_browser(user_agent) }
+  end
 end
 

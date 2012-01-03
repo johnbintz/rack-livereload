@@ -5,11 +5,12 @@ module Rack
     LIVERELOAD_JS_PATH = '/__rack/livereload.js'
     LIVERELOAD_LOCAL_URI = 'http://localhost:35729/livereload.js'
 
+    BAD_USER_AGENTS = [ %r{MSIE} ]
+
     attr_reader :app
 
     def initialize(app, options = {})
-      @app = app
-      @options = options
+      @app, @options = app, options
     end
 
     def use_vendored?
@@ -48,9 +49,8 @@ module Rack
       else
         status, headers, body = @app.call(env)
 
-        if !@options[:ignore] || !@options[:ignore].any? { |filter| env['PATH_INFO'][filter] }
-          case headers['Content-Type']
-          when %r{text/html}
+        if !ignored?(env['PATH_INFO']) && !bad_browser?(env['HTTP_USER_AGENT'])
+          if headers['Content-Type'][%r{text/html}]
             content_length = 0
 
             body.each do |line|
@@ -83,6 +83,14 @@ module Rack
 
         [ status, headers, body ]
       end
+    end
+
+    def ignored?(path_info)
+      @options[:ignore] and @options[:ignore].any? { |filter| path_info[filter] }
+    end
+
+    def bad_browser?(user_agent)
+      BAD_USER_AGENTS.any? { |pattern| (user_agent || '')[pattern] }
     end
 
     private

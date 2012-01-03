@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   s.add_development_dependency "rspec"
+  s.add_development_dependency "cucumber"
   s.add_development_dependency "httparty"
   s.add_development_dependency "sinatra"
   s.add_development_dependency "shotgun"
@@ -28,6 +29,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mocha"
   s.add_development_dependency "guard"
   s.add_development_dependency "guard-rspec"
+  s.add_development_dependency "guard-cucumber"
   s.add_development_dependency "guard-livereload"
   s.add_development_dependency "webmock"
 
