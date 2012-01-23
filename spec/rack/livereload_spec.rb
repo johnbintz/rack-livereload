@@ -53,6 +53,18 @@ describe Rack::LiveReload do
     end
   end
 
+  context 'unknown Content-Type' do
+    let(:ret) { [ 200, {}, [ 'hey ho' ] ] }
+
+    before do
+      app.stubs(:call).with(env).returns(ret)
+    end
+
+    it 'should not break' do
+      middleware.call(env).should_not raise_error(NoMethodError, /You have a nil object/)
+    end
+  end
+
   context 'text/html' do
     before do
       app.stubs(:call).with(env).returns([ 200, { 'Content-Type' => 'text/html', 'Content-Length' => 0 }, [ '<head></head>' ] ])
