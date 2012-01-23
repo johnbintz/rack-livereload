@@ -50,7 +50,7 @@ module Rack
         status, headers, body = @app.call(env)
 
         if !ignored?(env['PATH_INFO']) && !bad_browser?(env['HTTP_USER_AGENT'])
-          if headers['Content-Type'][%r{text/html}]
+          if headers['Content-Type'] && headers['Content-Type'][%r{text/html}]
             content_length = 0
 
             body.each do |line|
