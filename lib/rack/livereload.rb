@@ -74,7 +74,7 @@ module Rack
                 headers["X-Rack-LiveReload"] = '1'
               end
 
-              content_length += line.length
+              content_length += line.bytesize
             end
 
             headers['Content-Length'] = content_length.to_s
