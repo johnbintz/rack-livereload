@@ -52,7 +52,7 @@ module Rack
         new_body = body.dup
 
         if !ignored?(env['PATH_INFO']) && !bad_browser?(env['HTTP_USER_AGENT'])
-          if headers['Content-Type'][%r{text/html}]
+          if headers['Content-Type'] && headers['Content-Type'][%r{text/html}]
             content_length = 0
 
             new_body = []
@@ -78,7 +78,7 @@ module Rack
                 headers["X-Rack-LiveReload"] = '1'
               end
 
-              content_length += line.length
+              content_length += line.bytesize
 
               new_body << line
             end
