@@ -42,6 +42,10 @@ module Rack
     end
 
     def call(env)
+      dup._call(env)
+    end
+
+    def _call(env)
       _, path, file = (env['PATH_INFO'] || '').split('/')
 
       if path == '__rack' && ::File.file?(target = ::File.expand_path("../../../js/#{file}", __FILE__))
