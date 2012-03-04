@@ -74,7 +74,7 @@ describe Rack::LiveReload do
     let(:host) { 'host' }
     let(:env) { { 'HTTP_HOST' => host } }
 
-    let(:ret) { middleware.call(env) }
+    let(:ret) { middleware._call(env) }
     let(:body) { ret.last.join }
     let(:length) { ret[1]['Content-Length'] }
 
@@ -174,7 +174,7 @@ describe Rack::LiveReload do
     end
 
     it 'should return the js file' do
-      middleware.call(env).should be_true
+      middleware._call(env).should be_true
     end
   end
 
