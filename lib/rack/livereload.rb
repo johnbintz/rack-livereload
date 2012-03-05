@@ -91,6 +91,9 @@ module Rack
           end
         end
 
+        body.close if body.respond_to?(:close)
+        new_body.close if new_body.respond_to?(:close)
+
         [ status, headers, new_body ]
       end
     end
