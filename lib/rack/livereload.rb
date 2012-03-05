@@ -53,15 +53,19 @@ module Rack
       else
         status, headers, body = @app.call(env)
 
-        new_body = body.dup
+        new_body = []
+
+        body.each do |line|
+          new_body << line
+        end
+
+        body.close if body.respond_to?(:close)
 
         if !ignored?(env['PATH_INFO']) && !bad_browser?(env['HTTP_USER_AGENT'])
           if headers['Content-Type'] && headers['Content-Type'][%r{text/html}]
             content_length = 0
 
-            new_body = []
-
-            body.each do |line|
+            new_body.each do |line|
               if !headers['X-Rack-LiveReload'] && line['</head>']
                 host_to_use = (@options[:host] || env['HTTP_HOST'] || 'localhost').gsub(%r{:.*}, '')
 
@@ -83,16 +87,11 @@ module Rack
               end
 
               content_length += line.bytesize
-
-              new_body << line
             end
 
             headers['Content-Length'] = content_length.to_s
           end
         end
-
-        body.close if body.respond_to?(:close)
-        new_body.close if new_body.respond_to?(:close)
 
         [ status, headers, new_body ]
       end
