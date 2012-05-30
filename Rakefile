@@ -1,4 +1,6 @@
 require "bundler/gem_tasks"
+require 'bundler/setup'
+require 'appraisal'
 
 desc 'Update livereload.js'
 task :update_livereload_js do

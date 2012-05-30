@@ -12,6 +12,7 @@ Use this with [guard-livereload](http://github.com/guard/guard-livereload) for m
 
 ### Rails
 
+
 In `config/environments/development.rb`:
 
 ``` ruby
