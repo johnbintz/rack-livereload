@@ -62,7 +62,7 @@ module Rack
         body.close if body.respond_to?(:close)
 
         if !ignored?(env['PATH_INFO']) && !bad_browser?(env['HTTP_USER_AGENT'])
-          if headers['Content-Type'] && headers['Content-Type'][%r{text/html}]
+          if headers['Content-Type'] && status == 200 && headers['Content-Type'][%r{text/html}]
             content_length = 0
 
             new_body.each do |line|
