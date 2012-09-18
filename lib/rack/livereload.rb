@@ -52,17 +52,12 @@ module Rack
         deliver_file(target)
       else
         status, headers, body = @app.call(env)
-
-        new_body = []
-
-        body.each do |line|
-          new_body << line
-        end
-
         body.close if body.respond_to?(:close)
 
-        if !ignored?(env['PATH_INFO']) && !bad_browser?(env['HTTP_USER_AGENT'])
-          if headers['Content-Type'] && status == 200 && headers['Content-Type'][%r{text/html}]
+        new_body = [] ; body.each { |line| new_body << line.to_s }
+
+        if !ignored?(env['PATH_INFO']) and !bad_browser?(env['HTTP_USER_AGENT'])
+          if headers['Content-Type'] and status == 200 and headers['Content-Type'][%r{text/html}]
             content_length = 0
 
             new_body.each do |line|
