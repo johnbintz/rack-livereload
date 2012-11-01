@@ -19,7 +19,7 @@ In `config/environments/development.rb`:
 
 ``` ruby
 MyApp::Application.configure do
-  config.middleware.insert_before(Rack::Lock, Rack::LiveReload)
+  config.middleware.insert_after(ActionDispatch::Static, Rack::LiveReload)
 
   # ...or, change some options...
 
