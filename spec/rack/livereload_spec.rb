@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'nokogiri'
 
 describe Rack::LiveReload do
   let(:middleware) { described_class.new(app, options) }
@@ -67,7 +68,7 @@ describe Rack::LiveReload do
 
   context 'text/html' do
     before do
-      app.stubs(:call).with(env).returns([ 200, { 'Content-Type' => 'text/html', 'Content-Length' => 0 }, [ '<head></head>' ] ])
+      app.stubs(:call).with(env).returns([ 200, { 'Content-Type' => 'text/html', 'Content-Length' => 0 }, [ page_html ] ])
       middleware.stubs(:use_vendored?).returns(true)
     end
 
@@ -77,6 +78,8 @@ describe Rack::LiveReload do
     let(:ret) { middleware._call(env) }
     let(:body) { ret.last.join }
     let(:length) { ret[1]['Content-Length'] }
+
+    let(:page_html) { '<head></head>' }
 
     context 'vendored' do
       it 'should add the vendored livereload js script tag' do
@@ -89,6 +92,17 @@ describe Rack::LiveReload do
 
         body.should include('swfobject')
         body.should include('web_socket')
+      end
+    end
+
+    context 'before script tags' do
+      let(:page_html) { '<head><script type="text/javascript" insert="before"></script></head>' }
+
+      let(:body_dom) { Nokogiri::XML(body) }
+
+      it 'should add the livereload js script tag before all other script tags' do
+        body_dom.at_css("script:eq(4)")[:src].should include(described_class::LIVERELOAD_JS_PATH)
+        body_dom.at_css("script:last-child")[:insert].should == "before"
       end
     end
 

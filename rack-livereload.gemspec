@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "guard-cucumber"
   s.add_development_dependency "guard-livereload"
   s.add_development_dependency "webmock"
+  s.add_development_dependency "nokogiri"
   s.add_development_dependency 'appraisal', '~> 0.4'
   s.add_runtime_dependency "rack"
 end

@@ -61,7 +61,7 @@ module Rack
             content_length = 0
 
             new_body.each do |line|
-              if !headers['X-Rack-LiveReload'] && line['</head>']
+              if !headers['X-Rack-LiveReload'] && (line['</head>'] || line['<script'])
                 host_to_use = (@options[:host] || env['HTTP_HOST'] || 'localhost').gsub(%r{:.*}, '')
 
                 if use_vendored?
@@ -76,7 +76,11 @@ module Rack
 
                 template = ERB.new(::File.read(::File.expand_path('../../../skel/livereload.html.erb', __FILE__)))
 
-                line.gsub!('</head>', %{#{template.result(binding)}</head>})
+                if line['<script']
+                  line.sub!('<script', %{#{template.result(binding)}<script})
+                else
+                  line.gsub!('</head>', %{#{template.result(binding)}</head>})
+                end
 
                 headers["X-Rack-LiveReload"] = '1'
               end
