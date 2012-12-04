@@ -95,12 +95,13 @@ describe Rack::LiveReload do
       end
     end
 
-    context 'before script tags' do
-      let(:page_html) { '<head><script type="text/javascript" insert="before"></script></head>' }
+    context 'at the top of the head tag' do
+      let(:page_html) { '<head attribute="attribute"><script type="text/javascript" insert="first"></script><script type="text/javascript" insert="before"></script></head>' }
 
       let(:body_dom) { Nokogiri::XML(body) }
 
       it 'should add the livereload js script tag before all other script tags' do
+        body_dom.at_css("head")[:attribute].should == 'attribute'
         body_dom.at_css("script:eq(4)")[:src].should include(described_class::LIVERELOAD_JS_PATH)
         body_dom.at_css("script:last-child")[:insert].should == "before"
       end
