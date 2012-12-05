@@ -47,7 +47,7 @@ use Rack::LiveReload, :min_delay => 500, ...
 ## How it works
 
 The necessary `script` tag to bring in a copy of [livereload.js](https://github.com/livereload/livereload-js) is
-injected right before the closing `head` tag in any `text/html` pages that come through. The `script` tag is built in
+injected right after the opening `head` tag in any `text/html` pages that come through. The `script` tag is built in
 such a way that the `HTTP_HOST` is used as the LiveReload host, so you can connect from external machines (say, to
 `mycomputer:3000` instead of `localhost:3000`) and as long as the LiveReload port is accessible from the external machine,
 you'll connect and be LiveReloading away!
@@ -80,6 +80,4 @@ use Rack::LiveReload, :no_swf => true
 
 Once more browsers support WebSockets than don't, this option will be reversed and you'll have
 to explicitly include the Flash shim.
-
-As usual, super-alpha!
 
