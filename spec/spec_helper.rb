@@ -1,4 +1,4 @@
-require 'mocha'
+require 'mocha/api'
 require 'webmock/rspec'
 
 require 'rack-livereload'
