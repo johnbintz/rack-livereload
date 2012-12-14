@@ -77,7 +77,7 @@ module Rack
                 template = ERB.new(::File.read(::File.expand_path('../../../skel/livereload.html.erb', __FILE__)))
 
                 if line['<head']
-                  line.gsub!(/<head[^>]*>/) { |match| %{#{match}#{template.result(binding)}} }
+                  line.gsub!(/<head([^(er)]|\s)[^>]*>/) { |match| %{#{match}#{template.result(binding)}} }
                 end
 
                 headers["X-Rack-LiveReload"] = '1'
