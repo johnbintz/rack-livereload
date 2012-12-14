@@ -223,5 +223,22 @@ describe Rack::LiveReload do
 
     it { should be_bad_browser(user_agent) }
   end
+
+  describe 'head tag regex' do
+    let(:regex) { described_class::HEAD_TAG_REGEX }
+    subject { regex }
+
+    it { should be_kind_of(Regexp) }
+
+    it 'only picks a valid <head> tag' do
+      regex.match("<head></head>").to_s.should eq('<head>')
+      regex.match("<head><title></title></head>").to_s.should eq('<head>')
+      regex.match("<head attribute='something'><title></title></head>").to_s.should eq("<head attribute='something'>")
+    end
+
+    it 'responds false when no head tag' do
+      regex.match("<header></header>").should be_false
+    end
+  end
 end
 

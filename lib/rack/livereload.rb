@@ -4,6 +4,7 @@ module Rack
   class LiveReload
     LIVERELOAD_JS_PATH = '/__rack/livereload.js'
     LIVERELOAD_LOCAL_URI = 'http://localhost:35729/livereload.js'
+    HEAD_TAG_REGEX = /<head>|<head[^(er)][^<]*>/
 
     BAD_USER_AGENTS = [ %r{MSIE} ]
 
@@ -77,7 +78,7 @@ module Rack
                 template = ERB.new(::File.read(::File.expand_path('../../../skel/livereload.html.erb', __FILE__)))
 
                 if line['<head']
-                  line.gsub!(/<head([^(er)]|\s)[^>]*>/) { |match| %{#{match}#{template.result(binding)}} }
+                  line.gsub!(HEAD_TAG_REGEX) { |match| %{#{match}#{template.result(binding)}} }
                 end
 
                 headers["X-Rack-LiveReload"] = '1'
