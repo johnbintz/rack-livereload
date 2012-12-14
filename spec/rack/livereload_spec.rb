@@ -107,6 +107,17 @@ describe Rack::LiveReload do
       end
     end
 
+    context 'in header tags' do
+      let(:page_html) { "<header class='hero'><h1>Just a normal header tag</h1></header>" }
+
+      let(:body_dom) { Nokogiri::XML(body) }
+
+      it 'should not add the livereload js' do
+        body_dom.at_css("header")[:class].should == 'hero'
+        body_dom.css('script').should be_empty
+      end
+    end
+
     context 'not vendored' do
       before do
         middleware.stubs(:use_vendored?).returns(false)
