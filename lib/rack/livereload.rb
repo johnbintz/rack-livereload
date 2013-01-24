@@ -52,7 +52,10 @@ module Rack
       if path == '__rack' && ::File.file?(target = ::File.expand_path("../../../js/#{file}", __FILE__))
         deliver_file(target)
       else
-        status, headers, body = @app.call(env)
+        status, headers, body = result = @app.call(env)
+
+        return result if headers['Content-Type'] and headers['Content-Type']['text/event-stream']
+
         body.close if body.respond_to?(:close)
 
         new_body = [] ; body.each { |line| new_body << line.to_s }
