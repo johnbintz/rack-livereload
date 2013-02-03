@@ -317,7 +317,7 @@ var Options;
 __options.Options = Options = (function() {
   function Options() {
     this.host = null;
-    this.port = 35729;
+    this.port = RACK_LIVERELOAD_PORT;
     this.snipver = null;
     this.ext = null;
     this.extver = null;
