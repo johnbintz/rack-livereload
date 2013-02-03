@@ -4,6 +4,7 @@
     <% if force_swf? %>
       WEB_SOCKET_FORCE_FLASH = true;
     <% end %>
+    RACK_LIVERELOAD_PORT = <%= @port %>;
   </script>
   <script type="text/javascript" src="/__rack/swfobject.js"></script>
   <script type="text/javascript" src="/__rack/web_socket.js"></script>

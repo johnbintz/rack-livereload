@@ -3,15 +3,19 @@ require 'erb'
 module Rack
   class LiveReload
     LIVERELOAD_JS_PATH = '/__rack/livereload.js'
-    LIVERELOAD_LOCAL_URI = 'http://localhost:35729/livereload.js'
     HEAD_TAG_REGEX = /<head>|<head[^(er)][^<]*>/
 
     BAD_USER_AGENTS = [ %r{MSIE} ]
+
+    def livereload_local_uri
+      "http://localhost:#{@port}/livereload.js"
+    end
 
     attr_reader :app
 
     def initialize(app, options = {})
       @app, @options = app, options
+      @port = @options[:live_reload_port] || 35729
     end
 
     def use_vendored?
@@ -23,7 +27,8 @@ module Rack
         require 'net/http'
         require 'uri'
 
-        uri = URI.parse(LIVERELOAD_LOCAL_URI)
+
+        uri = URI.parse(livereload_local_uri)
 
         http = Net::HTTP.new(uri.host, uri.port)
         http.read_timeout = 1
@@ -71,7 +76,7 @@ module Rack
                 if use_vendored?
                   src = LIVERELOAD_JS_PATH.dup + "?host=#{host_to_use}"
                 else
-                  src = LIVERELOAD_LOCAL_URI.dup.gsub('localhost', host_to_use) + '?'
+                  src = livereload_local_uri.dup.gsub('localhost', host_to_use) + '?'
                 end
 
                 src << "&mindelay=#{@options[:min_delay]}" if @options[:min_delay]

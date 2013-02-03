@@ -12,7 +12,7 @@ describe Rack::LiveReload do
   let(:env) { {} }
   let(:options) { {} }
 
-  describe described_class::LIVERELOAD_LOCAL_URI do
+  describe "livereload local uri" do
     context 'does not exist' do
       before do
         stub_request(:any, 'localhost:35729/livereload.js').to_timeout
@@ -27,6 +27,16 @@ describe Rack::LiveReload do
       end
 
       it { should_not use_vendored }
+    end
+
+    context 'with custom port' do
+      let(:options) { {:live_reload_port => '12348'}}
+      context 'exists' do
+        before do
+          stub_request(:any, 'localhost:12348/livereload.js')
+        end
+        it { should_not use_vendored }
+      end
     end
 
     context 'specify vendored' do
@@ -120,7 +130,17 @@ describe Rack::LiveReload do
         body_dom.at_css("script:eq(4)")[:src].should include(described_class::LIVERELOAD_JS_PATH)
         body_dom.at_css("script:last-child")[:insert].should == "before"
       end
+
     end
+
+    describe "LIVERELOAD_PORT value" do
+      let(:options) { {:live_reload_port => 12345 }}
+      it "sets the variable at the top of the file" do
+        body.should include 'RACK_LIVERELOAD_PORT = 12345'
+      end
+    end
+
+
 
     context 'in header tags' do
       let(:page_html) { "<header class='hero'><h1>Just a normal header tag</h1></header>" }
@@ -140,7 +160,7 @@ describe Rack::LiveReload do
 
       it 'should add the LR livereload js script tag' do
         body.should include("script")
-        body.should include(described_class::LIVERELOAD_LOCAL_URI.gsub('localhost', 'host'))
+        body.should include(middleware.livereload_local_uri.gsub('localhost', 'host'))
       end
     end
 
