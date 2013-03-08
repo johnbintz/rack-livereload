@@ -161,6 +161,15 @@ describe Rack::LiveReload do
         body_dom.at_css("script:last-child")[:insert].should == "before"
       end
 
+      context 'when a relative URL root is specified' do
+        before do
+          ENV['RAILS_RELATIVE_URL_ROOT'] = '/a_relative_path'
+        end
+
+        it 'should prepend the relative path to the script src' do
+          body_dom.at_css("script:eq(5)")[:src].should match(%r{^/a_relative_path/})
+        end
+      end
     end
 
     describe "LIVERELOAD_PORT value" do
