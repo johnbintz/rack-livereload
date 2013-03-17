@@ -79,9 +79,9 @@ module Rack
                   src = livereload_local_uri.dup.gsub('localhost', host_to_use) + '?'
                 end
 
-                src << "&mindelay=#{@options[:min_delay]}" if @options[:min_delay]
-                src << "&maxdelay=#{@options[:max_delay]}" if @options[:max_delay]
-                src << "&port=#{@options[:port]}" if @options[:port]
+                src << "&amp;mindelay=#{@options[:min_delay]}" if @options[:min_delay]
+                src << "&amp;maxdelay=#{@options[:max_delay]}" if @options[:max_delay]
+                src << "&amp;port=#{@options[:port]}" if @options[:port]
 
                 template = ERB.new(::File.read(::File.expand_path('../../../skel/livereload.html.erb', __FILE__)))
 
