@@ -79,6 +79,36 @@ describe Rack::LiveReload do
     end
   end
 
+  context 'chunked response' do
+    let(:body) { [ '<head></head>' ] }
+    let(:ret) { [ 200, { 'Transfer-Encoding' => 'chunked' }, body ] }
+
+    before do
+      app.stubs(:call).with(env).returns(ret)
+      body.expects(:close).never
+      body.stubs(:respond_to?).with(:close).returns(true)
+    end
+
+    it 'should pass through' do
+      middleware.call(env).should == ret
+    end
+  end
+
+  context 'inline disposition' do
+    let(:body) { [ '<head></head>' ] }
+    let(:ret) { [ 200, { 'Content-Disposition' => 'inline; filename=my_inlined_file' }, body ] }
+
+    before do
+      app.stubs(:call).with(env).returns(ret)
+      body.expects(:close).never
+      body.stubs(:respond_to?).with(:close).returns(true)
+    end
+
+    it 'should pass through' do
+      middleware.call(env).should == ret
+    end
+  end
+
   context 'unknown Content-Type' do
     let(:ret) { [ 200, {}, [ 'hey ho' ] ] }
 
