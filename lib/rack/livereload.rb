@@ -59,7 +59,9 @@ module Rack
       else
         status, headers, body = result = @app.call(env)
 
-        if (headers['Content-Type'] and headers['Content-Type']['text/event-stream']) or headers['Transfer-Encoding'] == 'chunked'
+        if (headers['Content-Type'] and headers['Content-Type']['text/event-stream']) or
+            headers['Transfer-Encoding'] == 'chunked' or
+            headers['Content-Disposition'] =~ %r{^inline}
           return result 
         end
 
