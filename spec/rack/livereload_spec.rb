@@ -157,7 +157,7 @@ describe Rack::LiveReload do
 
       it 'should add the livereload js script tag before all other script tags' do
         body_dom.at_css("head")[:attribute].should == 'attribute'
-        body_dom.at_css("script:eq(4)")[:src].should include(described_class::LIVERELOAD_JS_PATH)
+        body_dom.at_css("script:eq(5)")[:src].should include(described_class::LIVERELOAD_JS_PATH)
         body_dom.at_css("script:last-child")[:insert].should == "before"
       end
 
