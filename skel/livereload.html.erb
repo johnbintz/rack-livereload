@@ -5,8 +5,8 @@
       WEB_SOCKET_FORCE_FLASH = true;
     <% end %>
   </script>
-  <script type="text/javascript" src="/__rack/swfobject.js"></script>
-  <script type="text/javascript" src="/__rack/web_socket.js"></script>
+  <script type="text/javascript" src="<%= app_root %>/__rack/swfobject.js"></script>
+  <script type="text/javascript" src="<%= app_root %>/__rack/web_socket.js"></script>
 <% end %>
 <script type="text/javascript">
   RACK_LIVERELOAD_PORT = <%= @port %>;
