@@ -77,8 +77,10 @@ module Rack
               if !headers['X-Rack-LiveReload'] && line['<head']
                 host_to_use = (@options[:host] || env['HTTP_HOST'] || 'localhost').gsub(%r{:.*}, '')
 
+                app_root = ENV['RAILS_RELATIVE_URL_ROOT'] || ''
+
                 if use_vendored?
-                  src = LIVERELOAD_JS_PATH.dup + "?host=#{host_to_use}"
+                  src = "#{app_root}#{LIVERELOAD_JS_PATH.dup}?host=#{host_to_use}"
                 else
                   src = livereload_local_uri.dup.gsub('localhost', host_to_use) + '?'
                 end
