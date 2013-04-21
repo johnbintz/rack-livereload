@@ -53,10 +53,25 @@ describe Rack::LiveReload do
   end
 
   context 'not text/html' do
-    let(:ret) { [ 200, { 'Content-Type' => 'image/png' }, [ '<head></head>' ] ] }
+    let(:ret) { [ 200, { 'Content-Type' => 'application/pdf' }, [ '<head></head>' ] ] }
 
     before do
       app.stubs(:call).with(env).returns(ret)
+    end
+
+    it 'should pass through' do
+      middleware.call(env).should == ret
+    end
+  end
+
+  context 'image/png' do
+    let(:body) { [ '<head></head>' ] }
+    let(:ret) { [ 200, { 'Content-Type' => 'image/png' }, body ] }
+
+    before do
+      app.stubs(:call).with(env).returns(ret)
+      body.expects(:close).never
+      body.stubs(:respond_to?).with(:close).returns(true)
     end
 
     it 'should pass through' do
