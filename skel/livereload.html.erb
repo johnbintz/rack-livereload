@@ -9,7 +9,7 @@
   <script type="text/javascript" src="<%= app_root %>/__rack/web_socket.js"></script>
 <% end %>
 <script type="text/javascript">
-  RACK_LIVERELOAD_PORT = <%= @port %>;
+  RACK_LIVERELOAD_PORT = <%= @options[:live_reload_port] %>;
 </script>
 <script type="text/javascript" src="<%= src %>"></script>
 
