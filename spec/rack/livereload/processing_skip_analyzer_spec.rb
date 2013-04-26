@@ -12,6 +12,12 @@ describe Rack::LiveReload::ProcessingSkipAnalyzer do
   let(:headers) { {} }
   let(:body) { [] }
 
+  describe '#skip_processing?' do
+    it "should skip processing" do
+      subject.skip_processing?.should be_true
+    end
+  end
+
   describe '#bad_browser?' do
     let(:user_agent) { described_class::BAD_USER_AGENTS.first.source }
 

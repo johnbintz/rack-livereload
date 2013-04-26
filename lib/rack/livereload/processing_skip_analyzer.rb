@@ -16,7 +16,7 @@ module Rack
       end
 
       def skip_processing?
-        !html? || event_stream? || chunked? || inline? || ignored? || bad_browser?
+        !html? || chunked? || inline? || ignored? || bad_browser?
       end
 
       def chunked?
