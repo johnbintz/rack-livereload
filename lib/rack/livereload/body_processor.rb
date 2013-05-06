@@ -61,6 +61,7 @@ module Rack
       end
 
       def process!(env)
+        @env = env
         @body.close if @body.respond_to?(:close)
 
         @new_body = [] ; @body.each { |line| @new_body << line.to_s }
@@ -70,22 +71,6 @@ module Rack
 
         @new_body.each do |line|
           if !@livereload_added && line['<head']
-            host_to_use = (@options[:host] || env['HTTP_HOST'] || 'localhost').gsub(%r{:.*}, '')
-
-            app_root = ENV['RAILS_RELATIVE_URL_ROOT'] || ''
-
-            if use_vendored?
-              src = "#{app_root}#{LIVERELOAD_JS_PATH.dup}?host=#{host_to_use}"
-            else
-              src = livereload_local_uri.dup.gsub('localhost', host_to_use) + '?'
-            end
-
-            src << "&amp;mindelay=#{@options[:min_delay]}" if @options[:min_delay]
-            src << "&amp;maxdelay=#{@options[:max_delay]}" if @options[:max_delay]
-            src << "&amp;port=#{@options[:port]}" if @options[:port]
-
-            template = ERB.new(::File.read(::File.expand_path('../../../../skel/livereload.html.erb', __FILE__)))
-
             line.gsub!(HEAD_TAG_REGEX) { |match| %{#{match}#{template.result(binding)}} }
 
             @livereload_added = true
@@ -94,6 +79,32 @@ module Rack
           @content_length += line.bytesize
           @processed = true
         end
+      end
+
+      def app_root
+        ENV['RAILS_RELATIVE_URL_ROOT'] || ''
+      end
+
+      def host_to_use
+        (@options[:host] || @env['HTTP_HOST'] || 'localhost').gsub(%r{:.*}, '')
+      end
+
+      def template
+        ERB.new(::File.read(::File.expand_path('../../../../skel/livereload.html.erb', __FILE__)))
+      end
+
+      def livereload_source
+        if use_vendored?
+          src = "#{app_root}#{LIVERELOAD_JS_PATH.dup}?host=#{host_to_use}"
+        else
+          src = livereload_local_uri.dup.gsub('localhost', host_to_use) + '?'
+        end
+
+        src << "&amp;mindelay=#{@options[:min_delay]}" if @options[:min_delay]
+        src << "&amp;maxdelay=#{@options[:max_delay]}" if @options[:max_delay]
+        src << "&amp;port=#{@options[:port]}" if @options[:port]
+
+        src
       end
     end
   end
