@@ -36,7 +36,7 @@ module Rack
       end
 
       def html?
-        @headers['Content-Type'] =~ %r{text/html} and @status == 200
+        @headers['Content-Type'] =~ %r{text/html}
       end
     end
   end
