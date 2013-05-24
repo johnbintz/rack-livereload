@@ -45,7 +45,7 @@ module Rack
           begin
             http.send_request('GET', uri.path)
             @use_vendored = false
-          rescue Timeout::Error, Errno::ECONNREFUSED, EOFError
+          rescue ::Timeout::Error, Errno::ECONNREFUSED, EOFError
             @use_vendored = true
           rescue => e
             $stderr.puts e.inspect
