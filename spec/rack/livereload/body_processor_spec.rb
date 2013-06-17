@@ -128,7 +128,7 @@ describe Rack::LiveReload::BodyProcessor do
       let(:options) { { :live_reload_port => 12345 }}
 
       it "sets the variable at the top of the file" do
-        processed_body.should include 'RACK_LIVERELOAD_PORT = 12345'
+        processed_body.should include 'data-live-reload-port="12345"'
       end
     end
 
@@ -173,7 +173,7 @@ describe Rack::LiveReload::BodyProcessor do
       let(:options) { { :force_swf => true } }
 
       it 'should not add the flash shim' do
-        processed_body.should include('WEB_SOCKET_FORCE_FLASH')
+        processed_body.should include('data-force-swf="true"')
         processed_body.should include('swfobject')
         processed_body.should include('web_socket')
       end
