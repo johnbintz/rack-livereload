@@ -16,7 +16,7 @@ module Rack
       end
 
       def skip_processing?
-        !html? || chunked? || inline? || ignored? || bad_browser?
+        !html? || chunked? || inline? || ignored? || bad_browser? || !get?
       end
 
       def chunked?
@@ -37,6 +37,10 @@ module Rack
 
       def html?
         @headers['Content-Type'] =~ %r{text/html}
+      end
+
+      def get?
+        @env['REQUEST_METHOD'] == 'GET'
       end
     end
   end

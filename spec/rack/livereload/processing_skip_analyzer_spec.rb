@@ -18,45 +18,40 @@ describe Rack::LiveReload::ProcessingSkipAnalyzer do
     end
   end
 
-  describe '#bad_browser?' do
-    let(:user_agent) { described_class::BAD_USER_AGENTS.first.source }
-
-    it { should be_bad_browser }
-  end
-
-  context 'ignored' do
+  describe '#ignored?' do
     let(:options) { { :ignore => [ %r{file} ] } }
 
-    context 'not root' do
+    context 'path contains ignore pattern' do
       let(:env) { { 'PATH_INFO' => '/this/file' } }
 
       it { should be_ignored }
     end
 
-    context 'root' do
+    context 'root path' do
       let(:env) { { 'PATH_INFO' => '/' } }
 
       it { should_not be_ignored }
     end
   end
 
-  context 'not text/html' do
-    let(:headers) { { 'Content-Type' => 'application/pdf' } }
+  describe '#chunked?' do
+    context 'regular response' do
+      it { should_not be_chunked }
+    end
 
-    it { should_not be_html }
+    context 'chunked response' do
+      let(:headers) { { 'Transfer-Encoding' => 'chunked' } }
+
+      it { should be_chunked }
+    end
   end
 
-  context 'chunked response' do
-    let(:headers) { { 'Transfer-Encoding' => 'chunked' } }
+  describe '#inline?' do
+    context 'inline disposition' do
+      let(:headers) { { 'Content-Disposition' => 'inline; filename=my_inlined_file' } }
 
-    it { should be_chunked }
-  end
-
-
-  context 'inline disposition' do
-    let(:headers) { { 'Content-Disposition' => 'inline; filename=my_inlined_file' } }
-
-    it { should be_inline }
+      it { should be_inline }
+    end
   end
 
   describe '#ignored?' do
@@ -71,6 +66,64 @@ describe Rack::LiveReload::ProcessingSkipAnalyzer do
       let(:options) { { :ignore => [ %r{#{path_info}} ] } }
 
       it { should be_ignored }
+    end
+  end
+
+  describe '#bad_browser?' do
+    context 'Firefox' do
+      it { should_not be_bad_browser }
+    end
+
+    context 'BAD browser' do
+      let(:user_agent) { described_class::BAD_USER_AGENTS.first.source }
+
+      it { should be_bad_browser }
+    end
+  end
+
+  describe '#html?' do
+    context 'HTML content' do
+      let(:headers) { { 'Content-Type' => 'text/html' } }
+
+      it { should be_html }
+    end
+
+    context 'PDF content' do
+      let(:headers) { { 'Content-Type' => 'application/pdf' } }
+
+      it { should_not be_html }
+    end
+  end
+
+  describe '#get?' do
+    context 'GET request' do
+      let(:env) { { 'REQUEST_METHOD' => 'GET' } }
+
+      it { should be_get }
+    end
+
+    context 'PUT request' do
+      let(:env) { { 'REQUEST_METHOD' => 'PUT' } }
+
+      it { should_not be_get }
+    end
+
+    context 'POST request' do
+      let(:env) { { 'REQUEST_METHOD' => 'POST' } }
+
+      it { should_not be_get }
+    end
+
+    context 'DELETE request' do
+      let(:env) { { 'REQUEST_METHOD' => 'DELETE' } }
+
+      it { should_not be_get }
+    end
+
+    context 'PATCH request' do
+      let(:env) { { 'REQUEST_METHOD' => 'PATCH' } }
+
+      it { should_not be_get }
     end
   end
 end
