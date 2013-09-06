@@ -28,7 +28,7 @@ MyApp::Application.configure do
     Rack::Lock, Rack::LiveReload,
     :min_delay => 500,
     :max_delay => 10000,
-    :port => 56789,
+    :live_reload_port => 56789,
     :host => 'myhost.cool.wow',
     :ignore => [ %r{dont/modify\.html$} ]
   )
