@@ -1,3 +1,5 @@
+# Rack::LiveReload
+
 <a href="http://travis-ci.org/johnbintz/rack-livereload"><img src="https://secure.travis-ci.org/johnbintz/rack-livereload.png" /></a>
 [![Code Climate](https://codeclimate.com/github/johnbintz/rack-livereload.png)](https://codeclimate.com/github/johnbintz/rack-livereload)
 
@@ -7,35 +9,45 @@ Even supports browsers without WebSockets!
 
 Use this with [guard-livereload](http://github.com/guard/guard-livereload) for maximum fun!
 
-## Install
-
-`gem install rack-livereload`
-
-## Using in...
+## Installation
 
 ### Rails
 
+Add the gem to your Gemfile.
 
-In `config/environments/development.rb`:
+```ruby
+gem "rack-livereload", :group => :development
+```
 
-``` ruby
+Then add the middleware to your Rails middleware stack by editing your `config/environments/development.rb`.
+
+```ruby
+# config/environments/development.rb
+
 MyApp::Application.configure do
-  config.middleware.insert_after(ActionDispatch::Static, Rack::LiveReload)
-
-  # ...or, change some options...
-
-  config.middleware.insert_before(
-    Rack::Lock, Rack::LiveReload,
-    :min_delay => 500,
-    :max_delay => 10000,
-    :live_reload_port => 56789,
-    :host => 'myhost.cool.wow',
-    :ignore => [ %r{dont/modify\.html$} ]
-  )
+  # Add Rack::LiveReload to the bottom of the middleware stack with the default options.
+  config.middleware.use Rack::LiveReload
+  
+  # ...
 end
 ```
 
-### config.ru/Sinatra
+#### Tweaking the options
+
+```ruby
+# Specifying Rack::LiveReload options.
+config.middleware.use(Rack::LiveReload,
+  :min_delay        => 500,    # default 1000
+  :max_delay        => 10_000, # default 60_000
+  :live_reload_port => 56789,  # default 35729
+  :host             => 'myhost.cool.wow',
+  :ignore           => [ %r{dont/modify\.html$} ]
+)
+```
+
+In addition, Rack::LiveReload's position within middleware stack can be specified by inserting it relative to an exsiting middleware via `insert_before` or `insert_after`. See the [Rails on Rack: Adding a Middleware](http://guides.rubyonrails.org/rails_on_rack.html#adding-a-middleware) section for more detail.
+
+### Sinatra / config.ru
 
 ``` ruby
 require 'rack-livereload'
