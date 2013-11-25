@@ -28,7 +28,8 @@ module Rack
       end
 
       def ignored?
-        @options[:ignore] and @options[:ignore].any? { |filter| @env['PATH_INFO'][filter] }
+        path = @env['QUERY_STRING'].empty? ? @env['PATH_INFO'] : "#{@env['PATH_INFO']}?#{@env['QUERY_STRING']}"
+        @options[:ignore] and @options[:ignore].any? { |filter| path[filter] }
       end
 
       def bad_browser?
