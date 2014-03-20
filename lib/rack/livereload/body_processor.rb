@@ -9,8 +9,12 @@ module Rack
 
       attr_reader :content_length, :new_body, :livereload_added
 
+      def protocol
+        @options[:protocol] || "http"
+      end
+
       def livereload_local_uri
-        "http://localhost:#{@options[:live_reload_port]}/livereload.js"
+        "#{protocol}://localhost:#{@options[:live_reload_port]}/livereload.js"
       end
 
       def initialize(body, options)
