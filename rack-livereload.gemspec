@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
   s.authors     = ["John Bintz"]
   s.email       = ["john@coswellproductions.com"]
   s.homepage    = ""
+  s.license     = "MIT"
   s.summary     = %q{Insert LiveReload into your app easily as Rack middleware}
   s.description = %q{Insert LiveReload into your app easily as Rack middleware}
 
