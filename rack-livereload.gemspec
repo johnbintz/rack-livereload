@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec-its"
   s.add_development_dependency "cucumber"
   s.add_development_dependency "httparty"
   s.add_development_dependency "sinatra"

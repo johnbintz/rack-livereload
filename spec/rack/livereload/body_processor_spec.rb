@@ -15,7 +15,7 @@ describe Rack::LiveReload::BodyProcessor do
     end
 
     it 'responds false when no head tag' do
-      regex.match("<header></header>").should be_false
+      regex.match("<header></header>").should be_falsey
     end
   end
 
@@ -140,6 +140,14 @@ describe Rack::LiveReload::BodyProcessor do
       it 'should not add the livereload js' do
         body_dom.at_css("header")[:class].should == 'hero'
         body_dom.css('script').should be_empty
+      end
+    end
+
+    context 'in document with more than one reference to a head tag' do
+      let(:page_html) { "<head><head><!-- <head></head> -->" }
+
+      it 'should not add the livereload js' do
+        processed_body.should include == "<!-- <head></head> -->"
       end
     end
 

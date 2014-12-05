@@ -20,7 +20,7 @@ describe Rack::LiveReload do
     end
 
     it 'should return the js file' do
-      middleware._call(env).should be_true
+      middleware._call(env).should be_truthy
     end
   end
 end
