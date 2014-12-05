@@ -2,23 +2,6 @@ require 'spec_helper'
 require 'nokogiri'
 
 describe Rack::LiveReload::BodyProcessor do
-  describe 'head tag regex' do
-    let(:regex) { described_class::HEAD_TAG_REGEX }
-    subject { regex }
-
-    it { should be_kind_of(Regexp) }
-
-    it 'only picks a valid <head> tag' do
-      regex.match("<head></head>").to_s.should eq('<head>')
-      regex.match("<head><title></title></head>").to_s.should eq('<head>')
-      regex.match("<head attribute='something'><title></title></head>").to_s.should eq("<head attribute='something'>")
-    end
-
-    it 'responds false when no head tag' do
-      regex.match("<header></header>").should be_false
-    end
-  end
-
   let(:processor) { described_class.new(body, options) }
   let(:body) { [ page_html ] }
   let(:options) { {} }
@@ -140,6 +123,14 @@ describe Rack::LiveReload::BodyProcessor do
       it 'should not add the livereload js' do
         body_dom.at_css("header")[:class].should == 'hero'
         body_dom.css('script').should be_empty
+      end
+    end
+
+    context 'in html content areas' do
+      let(:page_html) { "<script type='text/template'><head></head></script> <!-- <head></head> --> <xmp><head></head></xmp>" }
+
+      it 'should not add the livereload js' do
+        processed_body.should == "<script type=\"text/template\">\n  <head/>\n</script> <!-- <head></head> --> <xmp>\n  <head/>\n</xmp>"
       end
     end
 
