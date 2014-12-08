@@ -4,7 +4,6 @@ module Rack
   class LiveReload
     class BodyProcessor
       LIVERELOAD_JS_PATH = '/__rack/livereload.js'
-      HEAD_TAG_REGEX = /<head>|<head[^(er)][^<]*>/
       LIVERELOAD_PORT = 35729
 
       attr_reader :content_length, :new_body, :livereload_added
@@ -63,22 +62,20 @@ module Rack
       def process!(env)
         @env = env
         @body.close if @body.respond_to?(:close)
+        @string_body = '' ; @body.each { |line| @string_body += line.to_s }
 
-        @new_body = [] ; @body.each { |line| @new_body << line.to_s }
-
-        @content_length = 0
-        @livereload_added = false
-
-        @new_body.each do |line|
-          if !@livereload_added && line['<head']
-            line.gsub!(HEAD_TAG_REGEX) { |match| %{#{match}#{template.result(binding)}} }
-
-            @livereload_added = true
-          end
-
-          @content_length += line.bytesize
-          @processed = true
+        xmlfragment = Nokogiri::XML.fragment(@string_body)
+        head_elements = xmlfragment.xpath('./html/head|./head')
+        head_elements.each do |head|
+          head.inner_html = "#{template.result(binding)}\n #{head.inner_html}"
         end
+        @string_body = xmlfragment.to_s
+
+        @content_length = @string_body.bytesize()
+        @livereload_added = true if head_elements.length > 0
+
+        @processed = true
+        @new_body = [@string_body]
       end
 
       def app_root
