@@ -143,6 +143,14 @@ describe Rack::LiveReload::BodyProcessor do
       end
     end
 
+    context 'in inline javascript containing markup' do
+      let(:page_html) { '<head></head><script>var html="<head></head>";</script>' }
+
+      it 'should not add the livereload js' do
+        processed_body.should include('var html="<head></head>"')
+      end
+    end
+
     context 'not vendored' do
       before do
         processor.stubs(:use_vendored?).returns(false)
