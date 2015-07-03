@@ -7,7 +7,9 @@ describe Rack::LiveReload do
 
   subject { middleware }
 
-  its(:app) { should == app }
+  it 'should be an app' do
+    middleware.app.should be == app
+  end
 
   let(:env) { {} }
   let(:options) { {} }
@@ -20,7 +22,7 @@ describe Rack::LiveReload do
     end
 
     it 'should return the js file' do
-      middleware._call(env).should be_true
+      middleware._call(env).should be_truthy
     end
   end
 end

@@ -14,7 +14,7 @@ describe Rack::LiveReload::ProcessingSkipAnalyzer do
 
   describe '#skip_processing?' do
     it "should skip processing" do
-      subject.skip_processing?.should be_true
+      subject.skip_processing?.should be_truthy
     end
   end
 
