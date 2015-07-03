@@ -22,13 +22,13 @@ describe Rack::LiveReload::ProcessingSkipAnalyzer do
     let(:options) { { :ignore => [ %r{file} ] } }
 
     context 'path contains ignore pattern' do
-      let(:env) { { 'PATH_INFO' => '/this/file' } }
+      let(:env) { { 'PATH_INFO' => '/this/file', 'QUERY_STRING' => '' } }
 
       it { should be_ignored }
     end
 
     context 'root path' do
-      let(:env) { { 'PATH_INFO' => '/' } }
+      let(:env) { { 'PATH_INFO' => '/', 'QUERY_STRING' => '' } }
 
       it { should_not be_ignored }
     end
@@ -56,7 +56,8 @@ describe Rack::LiveReload::ProcessingSkipAnalyzer do
 
   describe '#ignored?' do
     let(:path_info) { 'path info' }
-    let(:env) { { 'PATH_INFO' => path_info } }
+    let(:query_string) { 'query_string' }
+    let(:env) { { 'PATH_INFO' => path_info, 'QUERY_STRING' => query_string } }
 
     context 'no ignore set' do
       it { should_not be_ignored }
@@ -64,6 +65,12 @@ describe Rack::LiveReload::ProcessingSkipAnalyzer do
 
     context 'ignore set' do
       let(:options) { { :ignore => [ %r{#{path_info}} ] } }
+
+      it { should be_ignored }
+    end
+
+    context 'ignore set including query_string' do
+      let(:options) { { :ignore => [ %r{#{path_info}\?#{query_string}} ] } }
 
       it { should be_ignored }
     end
