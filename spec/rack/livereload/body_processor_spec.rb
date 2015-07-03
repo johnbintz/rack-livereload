@@ -15,7 +15,7 @@ describe Rack::LiveReload::BodyProcessor do
     end
 
     it 'responds false when no head tag' do
-      regex.match("<header></header>").should be_false
+      regex.match("<header></header>").should be_falsey
     end
   end
 
