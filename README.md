@@ -16,7 +16,7 @@ Use this with [guard-livereload](http://github.com/guard/guard-livereload) for m
 Add the gem to your Gemfile.
 
 ```ruby
-gem "rack-livereload", :group => :development
+gem "rack-livereload", group: :development
 ```
 
 Then add the middleware to your Rails middleware stack by editing your `config/environments/development.rb`.
@@ -25,9 +25,12 @@ Then add the middleware to your Rails middleware stack by editing your `config/e
 # config/environments/development.rb
 
 MyApp::Application.configure do
-  # Add Rack::LiveReload to the bottom of the middleware stack with the default options.
+  # Add Rack::LiveReload to the bottom of the middleware stack with the default options:
   config.middleware.insert_after ActionDispatch::Static, Rack::LiveReload
-  
+
+  # or, if you're using better_errors:
+  config.middleware.insert_before Rack::Lock, Rack::LiveReload
+
   # ...
 end
 ```
@@ -37,15 +40,19 @@ end
 ```ruby
 # Specifying Rack::LiveReload options.
 config.middleware.use(Rack::LiveReload,
-  :min_delay        => 500,    # default 1000
-  :max_delay        => 10_000, # default 60_000
-  :live_reload_port => 56789,  # default 35729
-  :host             => 'myhost.cool.wow',
-  :ignore           => [ %r{dont/modify\.html$} ]
+  min_delay        : 500,    # default 1000
+  max_delay        : 10_000, # default 60_000
+  live_reload_port : 56789,  # default 35729
+  host             : 'myhost.cool.wow',
+  ignore           : [ %r{dont/modify\.html$} ]
 )
 ```
 
-In addition, Rack::LiveReload's position within middleware stack can be specified by inserting it relative to an exsiting middleware via `insert_before` or `insert_after`. See the [Rails on Rack: Adding a Middleware](http://guides.rubyonrails.org/rails_on_rack.html#adding-a-middleware) section for more detail.
+In addition, Rack::LiveReload's position within middleware stack can be
+specified by inserting it relative to an exsiting middleware via
+`insert_before` or `insert_after`. See the [Rails on Rack: Adding a
+Middleware](http://guides.rubyonrails.org/rails_on_rack.html#adding-a-middleware)
+section for more detail.
 
 ### Sinatra / config.ru
 
@@ -54,7 +61,7 @@ require 'rack-livereload'
 
 use Rack::LiveReload
 # ...or...
-use Rack::LiveReload, :min_delay => 500, ...
+use Rack::LiveReload, min_delay: 500, ...
 ```
 
 ## How it works
@@ -82,13 +89,13 @@ your browser doesn't need it. The SWF WebSocket implementor won't be loaded unle
 WebSockets support or if you force it in the middleware stack:
 
 ``` ruby
-use Rack::LiveReload, :force_swf => true
+use Rack::LiveReload, force_swf: true
 ```
 
 If you don't want any of the web-sockets-js code included at all, use the `no_swf` option:
 
 ``` ruby
-use Rack::LiveReload, :no_swf => true
+use Rack::LiveReload, no_swf: true
 ```
 
 Once more browsers support WebSockets than don't, this option will be reversed and you'll have
