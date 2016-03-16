@@ -16,7 +16,7 @@ Use this with [guard-livereload](http://github.com/guard/guard-livereload) for m
 Add the gem to your Gemfile.
 
 ```ruby
-gem "rack-livereload", :group => :development
+gem "rack-livereload", group: :development
 ```
 
 Then add the middleware to your Rails middleware stack by editing your `config/environments/development.rb`.
@@ -37,11 +37,11 @@ end
 ```ruby
 # Specifying Rack::LiveReload options.
 config.middleware.use(Rack::LiveReload,
-  :min_delay        => 500,    # default 1000
-  :max_delay        => 10_000, # default 60_000
-  :live_reload_port => 56789,  # default 35729
-  :host             => 'myhost.cool.wow',
-  :ignore           => [ %r{dont/modify\.html$} ]
+  min_delay        : 500,    # default 1000
+  max_delay        : 10_000, # default 60_000
+  live_reload_port : 56789,  # default 35729
+  host             : 'myhost.cool.wow',
+  ignore           : [ %r{dont/modify\.html$} ]
 )
 ```
 
@@ -54,7 +54,7 @@ require 'rack-livereload'
 
 use Rack::LiveReload
 # ...or...
-use Rack::LiveReload, :min_delay => 500, ...
+use Rack::LiveReload, min_delay: 500, ...
 ```
 
 ## How it works
@@ -82,13 +82,13 @@ your browser doesn't need it. The SWF WebSocket implementor won't be loaded unle
 WebSockets support or if you force it in the middleware stack:
 
 ``` ruby
-use Rack::LiveReload, :force_swf => true
+use Rack::LiveReload, force_swf: true
 ```
 
 If you don't want any of the web-sockets-js code included at all, use the `no_swf` option:
 
 ``` ruby
-use Rack::LiveReload, :no_swf => true
+use Rack::LiveReload, no_swf: true
 ```
 
 Once more browsers support WebSockets than don't, this option will be reversed and you'll have
