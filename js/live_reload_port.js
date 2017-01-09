@@ -1,0 +1,1 @@
+RACK_LIVERELOAD_PORT = document.getElementById('live_reload_options').getAttribute('data-live-reload-port');
