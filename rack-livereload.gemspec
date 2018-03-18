@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Rack::LiveReload::VERSION
   s.authors     = ["John Bintz"]
   s.email       = ["john@coswellproductions.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/johnbintz/rack-livereload"
   s.license     = "MIT"
   s.summary     = %q{Insert LiveReload into your app easily as Rack middleware}
   s.description = %q{Insert LiveReload into your app easily as Rack middleware}
