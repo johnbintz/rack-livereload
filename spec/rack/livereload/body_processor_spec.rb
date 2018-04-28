@@ -143,6 +143,14 @@ describe Rack::LiveReload::BodyProcessor do
       end
     end
 
+    context 'in document with more than one reference to a head tag' do
+      let(:page_html) { "<head><head><!-- <head></head> -->" }
+
+      it 'should not add the livereload js' do
+        processed_body.should include == "<!-- <head></head> -->"
+      end
+    end
+
     context 'not vendored' do
       before do
         processor.stubs(:use_vendored?).returns(false)

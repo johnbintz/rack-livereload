@@ -75,7 +75,7 @@ module Rack
 
         @new_body.each do |line|
           if !@livereload_added && line['<head']
-            line.gsub!(HEAD_TAG_REGEX) { |match| %{#{match}#{template.result(binding)}} }
+            line.sub!(HEAD_TAG_REGEX) { |match| %{#{match}#{template.result(binding)}} }
 
             @livereload_added = true
           end
@@ -113,4 +113,3 @@ module Rack
     end
   end
 end
-
