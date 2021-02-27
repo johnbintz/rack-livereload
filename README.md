@@ -1,6 +1,8 @@
-# Rack::LiveReload
+## _This fork is deprecated:_ 
 
-_This fork is deprecated: Go check out https://github.com/onesupercoder/rack-livereload instead._
+:warning: Go check out https://github.com/onesupercoder/rack-livereload instead.
+
+# Rack::LiveReload
 
 <a href="http://travis-ci.org/johnbintz/rack-livereload"><img src="https://secure.travis-ci.org/johnbintz/rack-livereload.png" /></a>
 [![Code Climate](https://codeclimate.com/github/johnbintz/rack-livereload.png)](https://codeclimate.com/github/johnbintz/rack-livereload)
