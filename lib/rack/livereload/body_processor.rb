@@ -4,7 +4,7 @@ module Rack
   class LiveReload
     class BodyProcessor
       LIVERELOAD_JS_PATH = '/__rack/livereload.js'
-      HEAD_TAG_REGEX = /<head>|<head[^(er)][^<]*>/
+      HEAD_TAG_REGEX = /<head( [^<]+)?>/
       LIVERELOAD_PORT = 35729
 
       attr_reader :content_length, :new_body, :livereload_added
